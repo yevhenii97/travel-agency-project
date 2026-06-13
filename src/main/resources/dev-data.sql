@@ -1,0 +1,37 @@
+INSERT INTO "user" (
+    id,
+    username,
+    password,
+    role,
+    phone_number,
+    account_status,
+    balance
+)
+VALUES
+(
+    'f3e02ce0-365d-4c03-90a1-98f00cf6d3d1',
+    'admin',
+    '$2a$10$v91efhSRCrOlLDK9xtP3s.bDtGAmJi52T9YU8u9ZHKp/dn7uZwNZe',
+    'ADMIN',
+    '111112222333',
+    true,
+    10000.00
+),
+(
+    'a3e02ce0-365d-4c03-90a1-98f00cf6d3d2',
+    'manager',
+    '$2a$10$v91efhSRCrOlLDK9xtP3s.bDtGAmJi52T9YU8u9ZHKp/dn7uZwNZe',
+    'MANAGER',
+    '111112222333',
+    true,
+    5000.00
+),
+(
+    'b3e02ce0-365d-4c03-90a1-98f00cf6d3d3',
+    'user',
+    '$2a$10$v91efhSRCrOlLDK9xtP3s.bDtGAmJi52T9YU8u9ZHKp/dn7uZwNZe',
+    'USER',
+    '111112222333',
+    true,
+    1000.00
+);
