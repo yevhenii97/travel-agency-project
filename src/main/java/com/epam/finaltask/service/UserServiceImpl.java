@@ -2,11 +2,9 @@ package com.epam.finaltask.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import com.epam.finaltask.dto.user.*;
-import com.epam.finaltask.mapper.interfaces.TransactionMapper;
 import com.epam.finaltask.mapper.interfaces.UserMapper;
 import com.epam.finaltask.model.entities.BalanceTransaction;
 import com.epam.finaltask.model.entities.User;
@@ -16,6 +14,7 @@ import com.epam.finaltask.repository.BalanceTransactionRepository;
 import com.epam.finaltask.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,19 +29,16 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final TransactionMapper transactionMapper;
     private final BalanceTransactionRepository balanceTransactionRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public List<UserResponseDTO> getAllUsers(Pageable pageable) {
-        List<UserResponseDTO> users = userRepository
+    public Page<UserResponseDTO> getAllUsers(Pageable pageable) {
+        Page<UserResponseDTO> users = userRepository
                 .findAllByRole(Role.USER, pageable)
-                .stream()
-                .map(userMapper::toUserUserResponseDTO)
-                .toList();
+                .map(userMapper::toUserUserResponseDTO);
 
-        log.debug("Found {} users", users.size());
+        log.debug("Found {} users", users.getTotalElements());
 
         return users;
     }

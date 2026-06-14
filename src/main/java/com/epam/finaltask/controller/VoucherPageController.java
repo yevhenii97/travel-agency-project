@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -29,21 +30,34 @@ public class VoucherPageController {
     @GetMapping("/dashboard")
     public String dashboard(
             Authentication authentication,
-            Model model
+            Model model,
+            @RequestParam(required = false) String tourType,
+            @RequestParam(required = false) String transferType,
+            @RequestParam(required = false) String hotelType,
+            @RequestParam(required = false) String maxPrice
     ) {
-        UserResponseDTO currentUser =
-                userService.getUserByUsername(authentication.getName());
+        UserResponseDTO currentUser = userService.getUserByUsername(authentication.getName());
 
-        List<VoucherDTO> vouchers;
+        boolean availableOnly = "USER".equals(currentUser.getRole());
 
-        if ("USER".equals(currentUser.getRole())) {
-            vouchers = voucherService.findAvailable(PageRequest.of(0, 100));
-        } else {
-            vouchers = voucherService.findAll(PageRequest.of(0, 100));
-        }
+        Double parsedMaxPrice = maxPrice == null || maxPrice.isBlank()
+                ? null
+                : Double.valueOf(maxPrice);
+
+        List<VoucherDTO> vouchers = voucherService.search(
+                tourType,
+                transferType,
+                hotelType,
+                parsedMaxPrice
+        );
 
         model.addAttribute("user", currentUser);
         model.addAttribute("vouchers", vouchers);
+
+        model.addAttribute("selectedTourType", tourType);
+        model.addAttribute("selectedTransferType", transferType);
+        model.addAttribute("selectedHotelType", hotelType);
+        model.addAttribute("selectedMaxPrice", maxPrice);
 
         return "user/dashboard";
     }

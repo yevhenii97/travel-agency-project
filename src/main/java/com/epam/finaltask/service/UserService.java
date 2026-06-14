@@ -1,13 +1,13 @@
 package com.epam.finaltask.service;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.epam.finaltask.dto.user.*;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserService {
-    List<UserResponseDTO> getAllUsers(Pageable pageable);
+    Page<UserResponseDTO> getAllUsers(Pageable pageable);
     UserResponseDTO updateUser(String username, UserUpdateRequestDTO userDTO);
     UserResponseDTO getUserByUsername(String username);
     UserResponseDTO changeAccountStatusById(String userId, ChangeUserStatusDTO userDTO);

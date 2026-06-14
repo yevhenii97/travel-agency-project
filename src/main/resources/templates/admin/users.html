@@ -1,114 +1,167 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-    <title>User Management</title>
+    <meta charset="UTF-8">
+    <title th:text="#{users.title}">User Management</title>
 
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 </head>
 
-<body>
+<body class="bg-light">
 
 <div class="container mt-4">
 
-    <div class="d-flex justify-content-between mb-3">
+    <div class="card shadow-sm">
 
-        <h2>User Management</h2>
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
 
-        <a th:href="@{/dashboard}"
-           class="btn btn-secondary">
-            Back
-        </a>
+            <h2 class="mb-0" th:text="#{users.title}">
+                User Management
+            </h2>
+
+            <div>
+                <a th:href="@{/admin/users(lang='en')}"
+                   class="btn btn-sm btn-outline-light">
+                    EN
+                </a>
+
+                <a th:href="@{/admin/users(lang='uk')}"
+                   class="btn btn-sm btn-outline-light">
+                    UA
+                </a>
+
+                <a th:href="@{/dashboard}"
+                   class="btn btn-sm btn-secondary"
+                   th:text="#{button.back}">
+                    Back
+                </a>
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-striped table-hover align-middle">
+
+                <thead class="table-dark">
+                <tr>
+                    <th th:text="#{users.username}">Username</th>
+                    <th th:text="#{users.role}">Role</th>
+                    <th th:text="#{users.balance}">Balance</th>
+                    <th th:text="#{users.status}">Status</th>
+                    <th th:text="#{users.actions}">Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="user : ${users}">
+
+                    <td th:text="${user.username}">username</td>
+
+                    <td>
+                        <span th:text="${user.role}">role</span>
+                    </td>
+
+                    <td th:text="${#numbers.formatDecimal(user.balance, 1, 2)}">0.00</td>
+
+                    <td>
+                        <span th:if="${user.active}"
+                              class="badge bg-success"
+                              th:text="#{users.active}">
+                            Active
+                        </span>
+
+                        <span th:unless="${user.active}"
+                              class="badge bg-danger"
+                              th:text="#{users.blocked}">
+                            Blocked
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <form th:if="${user.active}"
+                              th:action="@{/admin/users/{id}/block(id=${user.id})}"
+                              method="post"
+                              class="d-inline">
+
+                            <button class="btn btn-danger btn-sm"
+                                    th:text="#{button.block}">
+                                Block
+                            </button>
+
+                        </form>
+
+                        <form th:unless="${user.active}"
+                              th:action="@{/admin/users/{id}/unblock(id=${user.id})}"
+                              method="post"
+                              class="d-inline">
+
+                            <button class="btn btn-success btn-sm"
+                                    th:text="#{button.unblock}">
+                                Unblock
+                            </button>
+
+                        </form>
+
+                        <form th:if="${user.role == 'USER'}"
+                              th:action="@{/admin/users/{id}/manager(id=${user.id})}"
+                              method="post"
+                              class="d-inline">
+
+                            <button class="btn btn-warning btn-sm"
+                                    th:text="#{button.makeManager}">
+                                Make Manager
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+            <nav th:if="${usersPage.totalPages > 1}">
+                <ul class="pagination justify-content-center">
+
+                    <li class="page-item"
+                        th:classappend="${usersPage.first} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/users(page=${usersPage.number - 1}, size=${usersPage.size})}">
+                            Previous
+                        </a>
+                    </li>
+
+                    <li class="page-item"
+                        th:each="pageNumber : ${#numbers.sequence(0, usersPage.totalPages - 1)}"
+                        th:classappend="${pageNumber == usersPage.number} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/admin/users(page=${pageNumber}, size=${usersPage.size})}"
+                           th:text="${pageNumber + 1}">
+                            1
+                        </a>
+                    </li>
+
+                    <li class="page-item"
+                        th:classappend="${usersPage.last} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/users(page=${usersPage.number + 1}, size=${usersPage.size})}">
+                            Next
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+        </div>
 
     </div>
-
-    <table class="table table-striped table-hover align-middle">
-
-        <thead class="table-dark">
-        <tr>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Balance</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-
-        <tbody>
-
-        <tr th:each="user : ${users}">
-
-            <td th:text="${user.username}"></td>
-
-            <td>
-                <span th:text="${user.role}"></span>
-            </td>
-
-            <td th:text="${user.balance}"></td>
-
-            <td>
-
-                <span th:if="${user.active}"
-                      class="badge bg-success">
-                    Active
-                </span>
-
-                <span th:unless="${user.active}"
-                      class="badge bg-danger">
-                    Blocked
-                </span>
-
-            </td>
-
-            <td>
-
-                <!-- Block -->
-
-                <form th:if="${user.active}"
-                      th:action="@{/admin/users/{id}/block(id=${user.id})}"
-                      method="post"
-                      class="d-inline">
-
-                    <button class="btn btn-danger btn-sm">
-                        Block
-                    </button>
-
-                </form>
-
-                <!-- Unblock -->
-
-                <form th:unless="${user.active}"
-                      th:action="@{/admin/users/{id}/unblock(id=${user.id})}"
-                      method="post"
-                      class="d-inline">
-
-                    <button class="btn btn-success btn-sm">
-                        Unblock
-                    </button>
-
-                </form>
-
-                <!-- Make Manager -->
-
-                <form th:if="${user.role == 'USER'}"
-                      th:action="@{/admin/users/{id}/manager(id=${user.id})}"
-                      method="post"
-                      class="d-inline">
-
-                    <button class="btn btn-warning btn-sm">
-                        Make Manager
-                    </button>
-
-                </form>
-
-            </td>
-
-        </tr>
-
-        </tbody>
-
-    </table>
 
 </div>
 

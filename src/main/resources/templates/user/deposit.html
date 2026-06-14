@@ -2,52 +2,94 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Deposit Balance</title>
+
+    <title th:text="#{deposit.title}">
+        Deposit Balance
+    </title>
+
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 </head>
+
 <body class="bg-light">
 
 <div class="container mt-5">
+
     <div class="row justify-content-center">
+
         <div class="col-md-5">
 
             <div class="card shadow">
-                <div class="card-header bg-success text-white">
-                    <h3 class="mb-0">Deposit Balance</h3>
+
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+
+                    <h3 class="mb-0"
+                        th:text="#{deposit.title}">
+                        Deposit Balance
+                    </h3>
+
+                    <div>
+                        <a th:href="@{/users/me/deposit(lang='en')}"
+                           class="btn btn-sm btn-outline-light">
+                            EN
+                        </a>
+
+                        <a th:href="@{/users/me/deposit(lang='uk')}"
+                           class="btn btn-sm btn-outline-light">
+                            UA
+                        </a>
+                    </div>
+
                 </div>
 
                 <div class="card-body">
+
                     <form th:action="@{/users/me/deposit}"
                           th:object="${depositRequest}"
                           method="post">
 
                         <div class="mb-3">
-                            <label class="form-label">Amount</label>
+
+                            <label class="form-label"
+                                   th:text="#{deposit.amount}">
+                                Amount
+                            </label>
+
                             <input type="number"
                                    step="0.01"
                                    min="0.01"
                                    class="form-control"
                                    th:field="*{amount}"
-                                   placeholder="Enter amount">
+                                   th:placeholder="#{deposit.placeholder}">
+
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a th:href="@{/dashboard}" class="btn btn-secondary">
+
+                            <a th:href="@{/dashboard}"
+                               class="btn btn-secondary"
+                               th:text="#{button.back}">
                                 Back
                             </a>
 
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit"
+                                    class="btn btn-success"
+                                    th:text="#{button.deposit}">
                                 Deposit
                             </button>
+
                         </div>
 
                     </form>
+
                 </div>
+
             </div>
 
         </div>
+
     </div>
+
 </div>
 
 </body>

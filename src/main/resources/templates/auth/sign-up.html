@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sign Up</title>
+    <title th:text="#{auth.register}">Sign Up</title>
 
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
@@ -11,18 +11,35 @@
 <body class="bg-light">
 
 <div class="container mt-5">
+
     <div class="row justify-content-center">
+
         <div class="col-md-5">
 
             <div class="card shadow">
 
-                <div class="card-header bg-success text-white">
-                    <h3 class="mb-0">Create Account</h3>
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0" th:text="#{auth.register}">
+                        Create Account
+                    </h3>
+
+                    <div>
+                        <a th:href="@{/auth/sign-up(lang='en')}"
+                           class="btn btn-sm btn-outline-light">
+                            EN
+                        </a>
+
+                        <a th:href="@{/auth/sign-up(lang='uk')}"
+                           class="btn btn-sm btn-outline-light">
+                            UA
+                        </a>
+                    </div>
                 </div>
 
                 <div class="card-body">
 
-                    <div th:if="${error}" class="alert alert-danger"
+                    <div th:if="${error}"
+                         class="alert alert-danger"
                          th:text="${error}">
                     </div>
 
@@ -31,11 +48,15 @@
                           method="post">
 
                         <div class="mb-3">
-                            <label class="form-label">Username</label>
+                            <label class="form-label"
+                                   th:text="#{auth.username}">
+                                Username
+                            </label>
+
                             <input type="text"
                                    class="form-control"
                                    th:field="*{username}"
-                                   placeholder="Enter username">
+                                   th:placeholder="#{auth.username}">
 
                             <div class="text-danger"
                                  th:if="${#fields.hasErrors('username')}"
@@ -44,7 +65,11 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Phone Number</label>
+                            <label class="form-label"
+                                   th:text="#{auth.phoneNumber}">
+                                Phone Number
+                            </label>
+
                             <input type="text"
                                    class="form-control"
                                    th:field="*{phoneNumber}"
@@ -57,7 +82,11 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Password</label>
+                            <label class="form-label"
+                                   th:text="#{auth.password}">
+                                Password
+                            </label>
+
                             <input type="password"
                                    class="form-control"
                                    th:field="*{password}"
@@ -72,12 +101,14 @@
                         <div class="d-flex justify-content-between">
 
                             <a th:href="@{/}"
-                               class="btn btn-secondary">
+                               class="btn btn-secondary"
+                               th:text="#{button.back}">
                                 Back
                             </a>
 
                             <button type="submit"
-                                    class="btn btn-success">
+                                    class="btn btn-success"
+                                    th:text="#{auth.register}">
                                 Register
                             </button>
 
@@ -90,7 +121,9 @@
             </div>
 
         </div>
+
     </div>
+
 </div>
 
 </body>
