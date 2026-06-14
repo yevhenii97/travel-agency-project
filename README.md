@@ -1,104 +1,103 @@
-# Travel agency. Spring Project
+# Travel Agency Management Service
 
-The purpose of this task is to check your knowledge in Java and Spring.
+Spring Boot web application for managing travel vouchers, user accounts, orders, balances, and role-based travel agency operations.
 
-Duration: **18** hours
+## Application Overview
 
-## Description
+Travel Agency Service allows users to browse available tours, filter vouchers by categories, order vouchers, deposit balance, and manage their own account.
 
-In this task, you will implement "Travel Agency Service" using MVC pattern. All the main classes are available and waiting
-for you in the appropriate folders.
+Managers can control operational voucher state, such as marking vouchers as hot and changing voucher status.
 
-The class diagram of the Domain model is shown in the figure below:
+Administrators can manage users and vouchers, including blocking users, promoting users to managers, and creating/editing/deleting vouchers.
 
-![diagram.png](TravelAgency.jpg)
+## Main Capabilities
 
-The travel agency has a catalogue of tours. `Authorized user` can select tours by:
-- type (rest, excursion, shopping)
-- by price
-- by transfer type (car, plane, ship)
-- by hotel type;
+- User registration and login
+- Role-based access control
+- Voucher catalog
+- Voucher filtering
+- Voucher ordering
+- User balance management
+- Balance transaction history support
+- Hot voucher management
+- Voucher status management
+- Admin user management
+- Voucher CRUD management
+- UI internationalization
+- Validation and global error handling
+- Logging
 
-> Note: only registered users can select and order tours.
+## Tech Stack
 
-`Tour` must have:
-1. Title
-2. Description
-3. Price
-4. Type of tour
-5. Type of transfer
-6. Hotel type
-7. Status (registered, paid, canceled)
-8. Arrival ate
-9. Eviction date
+- Java
+- Spring Boot
+- Spring MVC
+- Spring Security
+- Spring Data JPA
+- Hibernate
+- Thymeleaf
+- Bootstrap
+- H2 Database
+- Bean Validation
+- Logback
+- BCrypt
 
-Tour can also be hot.
+## User Roles
 
-`User` must have personal account, which contains information about him (name, surname, balance, email, [optional] password), as well as a list of selected tours and their current status.
+### USER
 
-### Permissions
+- Register and sign in
+- View available vouchers
+- Filter vouchers
+- Order vouchers
+- View own vouchers
+- Deposit balance
+- Change password
 
-`Manager`
-- defines tour as `hot`. These tours are always displayed at the top of the list.
-- transfer the status of the tour from `registered` to `paid` or `canceled`
+### MANAGER
 
-`Administrator` has all manager functionality, plus:
-- add/delete tour
-- change tour information (all fields)
-- block/unblock user
+- Mark vouchers as hot
+- Change voucher status
 
+### ADMIN
 
+- Create/Edit/Delete vouchers
+- Manage users
+- Block/Unblock users
+- Promote users to manager
 
+## Internationalization
 
-## Commands
+Supported languages:
 
-### Run project
+- English
+- Ukrainian
 
-```mvn spring-boot:run```
+Implemented through:
 
+- messages.properties
+- messages_uk.properties
 
-## Structure
+## Local Run
 
-Your project is organized into several packages. Here's a brief overview of each:
+```bash
+./gradlew bootRun --args='--spring.profiles.active=dev'
+```
 
-- All configuration classes are located here.
+Application URL:
 
-- **`auth`**: Contains files related to authentication.
-- **`config`**: Contains configuration files for application.
-- **`controller`**: Contains implementations of all declared controllers.
-- **`dto`**: Contains DTO files.
-- **`exeption`**: Contains custom exceptions and error handler.
-- **`mapper`**: Contains Mapper files.
-- **`model`**: Contains entities files.
-- **`repository`**: Contains repository files.
-- **`service`**: Contains service interfaces and their implementations.
-- **`token`**: Contains JWT token related files.
+```text
+http://localhost:8080
+```
 
-## Requirements
+## Swagger
 
-You should use and successfully implement next points:
+```text
+http://localhost:8080/swagger-ui.html
+```
 
-- `Spring Data JPA`
-- `Spring Security`
-- `Internationalization and Localization`
-- `Validation`
-- `Error handling`
+## H2 Console
 
-## Nice to have
-
-- `Logging`
-- `Pagination and sorting`
-- `Other Spring technologies`
-- `Swagger API`
-- `Thymeleaf`
-
-## Recommendations
-
-- Use `Lombok`
-- Use tools like `Postman` or `Insomnia`
-- Use `ModelMapper`
-
-## Special message
-
-- Not forget to improvise and try to use different approaches while implementing your solution.
-- Time is limited to 18 hours. Don't waste your time.
+```text
+http://localhost:8080/h2-console
+```
