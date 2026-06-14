@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Tag(
-        name = "Voucher API", description = "API for managing travel vouchers"
+        name = "Voucher API Controller", description = "API for managing travel vouchers"
 )
 public class VoucherRestController {
 

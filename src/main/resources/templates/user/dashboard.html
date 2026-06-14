@@ -1,34 +1,226 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
 <head>
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>Dashboard | Travel Agency</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        .description-cell {
+            max-width: 320px;
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        .actions-cell {
+            min-width: 360px;
+            white-space: nowrap;
+        }
+    </style>
 </head>
-<body>
 
-<h1 align="center">Dashboard</h1>
+<body class="bg-light">
 
-<div class="container">
-  <table class="table table-bordered">
-    <thead>
-    <tr>
-      <th scope="col">#ID</th>
-      <th scope="col">Voucher Title</th>
-      <th scope="col">Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Fixed loop and columns to match the supposed properties -->
-    <tr th:each="voucher : ${vouchers}">
-      <td th:text="${voucher.id}"></td>
-      <td th:text="${voucher.title}"></td>
-      <td th:text="${voucher.description}"></td>
-      <td><a th:href="@{/vouchers/order}" class="btn btn-outline-success me-2" type="button">Order</a></td>
-    </tr>
-    </tbody>
-  </table>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/dashboard}">
+            Travel Agency
+        </a>
+
+        <div class="d-flex gap-2">
+            <a sec:authorize="hasRole('USER')"
+               th:href="@{/vouchers/my}"
+               class="btn btn-outline-light">
+                My Vouchers
+            </a>
+
+            <a sec:authorize="hasRole('USER')"
+               th:href="@{/users/me/deposit}"
+               class="btn btn-outline-success">
+                Deposit
+            </a>
+
+            <a sec:authorize="hasRole('USER')"
+               th:href="@{/users/me/password}"
+               class="btn btn-outline-info">
+                Change Password
+            </a>
+
+            <a sec:authorize="hasRole('ADMIN')"
+               th:href="@{/admin/users}"
+               class="btn btn-outline-warning">
+                Manage Users
+            </a>
+
+            <a sec:authorize="hasRole('ADMIN')"
+               th:href="@{/admin/vouchers/create}"
+               class="btn btn-warning">
+                Create Voucher
+            </a>
+
+            <a th:href="@{/auth/logout}" class="btn btn-outline-danger">
+                Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid px-4">
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body d-flex justify-content-between align-items-center">
+
+            <div>
+                <h3 class="mb-1">Available Vouchers</h3>
+                <p class="text-muted mb-0">
+                    Choose a tour and order it from the catalog
+                </p>
+            </div>
+
+            <div class="text-end">
+                <div>
+                    <strong>User:</strong>
+                    <span th:text="${user.username}">username</span>
+                </div>
+
+                <div>
+                    <strong>Role:</strong>
+                    <span th:text="${user.role}">role</span>
+                </div>
+
+                <div sec:authorize="hasRole('USER')">
+                    <strong>Balance:</strong>
+                    <span th:text="${user.balance}">0.00</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div th:if="${param.error}" class="alert alert-danger">
+        Could not complete operation. Please check balance, voucher status, or access permissions.
+    </div>
+
+    <div th:if="${param.success}" class="alert alert-success">
+        Operation completed successfully.
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Tour Type</th>
+                        <th>Hotel</th>
+                        <th>Status</th>
+                        <th>Hot</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="voucher : ${vouchers}">
+                        <td th:text="${voucher.title}">Title</td>
+
+                        <td class="description-cell"
+                            th:text="${voucher.description}">
+                            Description
+                        </td>
+
+                        <td th:text="${voucher.price}">0.00</td>
+                        <td th:text="${voucher.tourType}">Tour Type</td>
+                        <td th:text="${voucher.hotelType}">Hotel</td>
+                        <td th:text="${voucher.status}">Status</td>
+
+                        <td>
+                            <span th:if="${voucher.isHot}" class="badge bg-danger">HOT</span>
+                            <span th:unless="${voucher.isHot}" class="badge bg-secondary">Normal</span>
+                        </td>
+
+                        <td class="actions-cell text-center">
+                            <div class="d-flex gap-2 justify-content-center flex-nowrap">
+
+                                <form sec:authorize="hasRole('USER')"
+                                      th:action="@{/vouchers/{id}/order(id=${voucher.id})}"
+                                      method="post"
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        Order
+                                    </button>
+                                </form>
+
+                                <form sec:authorize="hasAnyRole('ADMIN','MANAGER')"
+                                      th:action="@{/manager/vouchers/{id}/hot(id=${voucher.id})}"
+                                      method="post"
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        Hot
+                                    </button>
+                                </form>
+
+                                <form sec:authorize="hasAnyRole('ADMIN','MANAGER')"
+                                      th:if="${voucher.status == 'REGISTERED'}"
+                                      th:action="@{/manager/vouchers/{id}/paid(id=${voucher.id})}"
+                                      method="post"
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                                        Paid
+                                    </button>
+                                </form>
+
+                                <form sec:authorize="hasAnyRole('ADMIN','MANAGER')"
+                                      th:if="${voucher.status == 'REGISTERED'}"
+                                      th:action="@{/manager/vouchers/{id}/cancel(id=${voucher.id})}"
+                                      method="post"
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                        Cancel
+                                    </button>
+                                </form>
+
+                                <a sec:authorize="hasRole('ADMIN')"
+                                   th:href="@{/admin/vouchers/{id}/edit(id=${voucher.id})}"
+                                   class="btn btn-sm btn-warning">
+                                    Edit
+                                </a>
+
+                                <form sec:authorize="hasRole('ADMIN')"
+                                      th:action="@{/admin/vouchers/{id}/delete(id=${voucher.id})}"
+                                      method="post"
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        Delete
+                                    </button>
+                                </form>
+
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(vouchers)}">
+                        <td colspan="8" class="text-center text-muted">
+                            No vouchers available
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

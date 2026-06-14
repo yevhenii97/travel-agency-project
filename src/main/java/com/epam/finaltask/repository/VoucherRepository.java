@@ -22,6 +22,9 @@ public interface VoucherRepository extends JpaRepository<Voucher, UUID> {
     List<Voucher> findAllByHotelType(HotelType hotelType);
     Page<Voucher> findAll(Pageable pageable);
     List<Voucher> findByIsHotTrueOrderByPriceAsc();
+    Page<Voucher> findAllByUserIsNull(Pageable pageable);
+    Page<Voucher> findAllByOrderByIsHotDescPriceAsc(Pageable pageable);
+    Page<Voucher> findAllByUserIsNullOrderByIsHotDescPriceAsc(Pageable pageable);
 
     @Query("""
        select v from Voucher v

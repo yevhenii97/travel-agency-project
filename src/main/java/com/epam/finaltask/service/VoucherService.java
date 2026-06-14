@@ -12,9 +12,11 @@ public interface VoucherService {
     VoucherDTO order(String id, String userId);
     VoucherDTO update(String id, VoucherDTO voucherDTO);
     void delete(String voucherId);
+    VoucherDTO findById(String id);
     VoucherDTO changeStatus(String id, ChangeVoucherStatusRequestDTO voucherDTO);
     VoucherDTO changeHotStatus(String id, ChangeHotStatusRequestDTO changeHotStatusRequestDTO);
 
+    List<VoucherDTO> findAvailable(Pageable pageable);
     List<VoucherDTO> findAllByUserId(String userId);
 
     List<VoucherDTO> search(

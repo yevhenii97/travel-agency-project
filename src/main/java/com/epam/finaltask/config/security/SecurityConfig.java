@@ -37,13 +37,33 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml",
-                                "/webjars/**"
+                                "/webjars/**",
+
+                                "/",
+                                "/auth/sign-in",
+                                "/auth/sign-up",
+                                "/auth/login",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**"
                         ).permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/vouchers/**").authenticated()
                         .requestMatchers("/api/users/**").authenticated()
 
                         .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/auth/sign-in")
+                        .loginProcessingUrl("/auth/login")
+                        .defaultSuccessUrl("/dashboard", true)
+                        .failureUrl("/auth/sign-in?error=true")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessUrl("/")
+                        .permitAll()
                 )
 
                 .httpBasic(Customizer.withDefaults())

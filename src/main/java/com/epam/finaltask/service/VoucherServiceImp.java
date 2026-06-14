@@ -180,6 +180,17 @@ public class VoucherServiceImp implements VoucherService {
     }
 
     @Override
+    public VoucherDTO findById(String id) {
+        Voucher voucher = voucherRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Voucher not found"
+                ));
+
+        return voucherMapper.toVoucherDTO(voucher);
+    }
+
+    @Override
     public VoucherDTO changeStatus(String id, ChangeVoucherStatusRequestDTO voucherDTO) {
         log.info("Changing voucher status: voucherId={}, requestedStatus={}", id, voucherDTO.getStatus());
 
@@ -214,6 +225,7 @@ public class VoucherServiceImp implements VoucherService {
     }
 
     @Override
+    @Transactional
     public VoucherDTO changeHotStatus(String id, ChangeHotStatusRequestDTO request) {
         log.info("Changing voucher hot status: voucherId={}, hot={}", id, request.isHot());
 
@@ -231,6 +243,14 @@ public class VoucherServiceImp implements VoucherService {
                 saved.getId(), saved.isHot());
 
         return voucherMapper.toVoucherDTO(saved);
+    }
+
+    @Override
+    public List<VoucherDTO> findAvailable(Pageable pageable) {
+        return voucherRepository.findAllByUserIsNullOrderByIsHotDescPriceAsc(pageable)
+                .stream()
+                .map(voucherMapper::toVoucherDTO)
+                .toList();
     }
 
     @Override
@@ -283,7 +303,7 @@ public class VoucherServiceImp implements VoucherService {
         log.info("Finding all vouchers: page={}, size={}, sort={}",
                 pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 
-        List<VoucherDTO> vouchers = voucherRepository.findAll(pageable)
+        List<VoucherDTO> vouchers = voucherRepository.findAllByOrderByIsHotDescPriceAsc(pageable)
                 .stream()
                 .map(voucherMapper::toVoucherDTO)
                 .toList();

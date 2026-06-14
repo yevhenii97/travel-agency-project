@@ -9,6 +9,12 @@
 <body>
 <div class="container">
     <h2>Login</h2>
+    <div th:if="${param.registered}" class="alert alert-success">
+        Registration successful. Please sign in.
+    </div>
+    <div th:if="${param.error}" class="alert alert-danger">
+        Invalid username or password
+    </div>
     <!-- Update the form to include th:action, th:object, and method attributes -->
     <form th:action="@{/auth/login}" th:object="${loginRequest}" method="post">
         <div class="form-group">
