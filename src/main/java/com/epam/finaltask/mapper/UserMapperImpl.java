@@ -1,7 +1,9 @@
 package com.epam.finaltask.mapper;
 
-import com.epam.finaltask.dto.UserDTO;
-import com.epam.finaltask.model.User;
+import com.epam.finaltask.dto.user.UserDTO;
+import com.epam.finaltask.dto.user.UserResponseDTO;
+import com.epam.finaltask.mapper.interfaces.UserMapper;
+import com.epam.finaltask.model.entities.User;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -14,7 +16,7 @@ public class UserMapperImpl implements UserMapper {
                 .username(dto.getUsername())
                 .phoneNumber(dto.getPhoneNumber())
                 .balance(BigDecimal.valueOf(dto.getBalance()))
-                .active(dto.isActive()).build();
+                .active(dto.getIsActive()).build();
     }
 
     @Override
@@ -25,6 +27,18 @@ public class UserMapperImpl implements UserMapper {
                 .phoneNumber(user.getPhoneNumber())
                 .balance(user.getBalance().doubleValue())
                 .role(user.getRole().name())
+                .isActive(user.isActive())
+                .build();
+    }
+
+    @Override
+    public UserResponseDTO toUserUserResponseDTO(User user) {
+        return UserResponseDTO.builder()
+                .id(String.valueOf(user.getId()))
+                .username(user.getUsername())
+                .role(String.valueOf(user.getRole()))
+                .phoneNumber(user.getPhoneNumber())
+                .balance(user.getBalance().doubleValue())
                 .active(user.isActive())
                 .build();
     }

@@ -1,6 +1,6 @@
 package com.epam.finaltask.restcontroller;
 
-import com.epam.finaltask.dto.UserDTO;
+import com.epam.finaltask.dto.user.UserResponseDTO;
 import com.epam.finaltask.dto.auth.LoginRequest;
 import com.epam.finaltask.dto.auth.RegisterRequest;
 import com.epam.finaltask.service.auth.AuthService;
@@ -39,9 +39,9 @@ public class AuthenticationRestController {
             @ApiResponse(responseCode = "400", description = "Invalid request data or user already exists"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<UserDTO> registerUser(@Valid @RequestBody RegisterRequest request) {
-//        System.out.println(new BCryptPasswordEncoder().encode("User11111"));
-        UserDTO user = authService.register(request);
+    public ResponseEntity<UserResponseDTO> registerUser(@Valid @RequestBody RegisterRequest request) {
+        log.info("Request to register username={}", request.getUsername());
+        UserResponseDTO user = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
@@ -56,8 +56,9 @@ public class AuthenticationRestController {
             @ApiResponse(responseCode = "401", description = "Invalid credentials"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<UserDTO> loginUser(@Valid @RequestBody LoginRequest request) {
-        UserDTO user = authService.login(request);
+    public ResponseEntity<UserResponseDTO> loginUser(@Valid @RequestBody LoginRequest request) {
+        log.info("Request to login username={}", request.getUsername());
+        UserResponseDTO user = authService.login(request);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 

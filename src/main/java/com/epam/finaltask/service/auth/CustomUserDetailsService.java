@@ -1,6 +1,6 @@
 package com.epam.finaltask.service.auth;
 
-import com.epam.finaltask.model.User;
+import com.epam.finaltask.model.entities.User;
 import com.epam.finaltask.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package com.epam.finaltask.restcontroller.thymeleaf;
+package com.epam.finaltask.restcontroller.controllers;
 
 import com.epam.finaltask.dto.auth.LoginRequest;
 import com.epam.finaltask.service.auth.AuthService;

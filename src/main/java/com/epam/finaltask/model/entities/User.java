@@ -1,9 +1,11 @@
-package com.epam.finaltask.model;
+package com.epam.finaltask.model.entities;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.epam.finaltask.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,4 +35,7 @@ public class User {
     private BigDecimal balance;
     @Column(name = "account_status")
     private boolean active;
+
+    @OneToMany(mappedBy = "user")
+    private List<BalanceTransaction> transactions = new ArrayList<>();;
 }
