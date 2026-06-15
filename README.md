@@ -81,7 +81,7 @@ Implemented through:
 ## Local Run
 
 ```bash
-./gradlew bootRun --args='--spring.profiles.active=dev'
+mvn bootRun --args='--spring.profiles.active=dev'
 ```
 
 Application URL:

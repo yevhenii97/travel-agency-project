@@ -7,5 +7,5 @@ import com.epam.finaltask.model.entities.User;
 public interface UserMapper {
     User toUser(UserDTO userDTO);
     UserDTO toUserDTO(User user);
-    UserResponseDTO toUserUserResponseDTO(User user);
+    UserResponseDTO toUserResponseDTO(User user);
 }

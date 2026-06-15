@@ -25,7 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class  UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     public Page<UserResponseDTO> getAllUsers(Pageable pageable) {
         Page<UserResponseDTO> users = userRepository
                 .findAllByRole(Role.USER, pageable)
-                .map(userMapper::toUserUserResponseDTO);
+                .map(userMapper::toUserResponseDTO);
 
         log.debug("Found {} users", users.getTotalElements());
 
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
         User saved = userRepository.save(userEntity);
         log.info("User updated successfully: username={}", saved.getUsername());
 
-        return userMapper.toUserUserResponseDTO(saved);
+        return userMapper.toUserResponseDTO(saved);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
                 });
 
         log.debug("User found: id={}, username={}, role={}", userEntity.getId(), userEntity.getUsername(), userEntity.getRole());
-        return userMapper.toUserUserResponseDTO(userEntity);
+        return userMapper.toUserResponseDTO(userEntity);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
         User saved = userRepository.save(existingUser);
 
         log.info("Account status changed successfully: userId={}, active={}", saved.getId(), saved.isActive());
-        return userMapper.toUserUserResponseDTO(saved);
+        return userMapper.toUserResponseDTO(saved);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
         User saved = userRepository.save(existingUser);
 
         log.info("Account status changed successfully: username={}, active={}", saved.getUsername(), saved.isActive());
-        return userMapper.toUserUserResponseDTO(saved);
+        return userMapper.toUserResponseDTO(saved);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
                 });
 
         log.debug("User found: username={}, role={}", userEntity.getUsername(), userEntity.getRole());
-        return userMapper.toUserUserResponseDTO(userEntity);
+        return userMapper.toUserResponseDTO(userEntity);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
 
         if (userEntity.getRole() == Role.ADMIN) {
             log.warn("Attempt to change ADMIN role: userId={}", userId);
-            return userMapper.toUserUserResponseDTO(userEntity);
+            return userMapper.toUserResponseDTO(userEntity);
         }
 
         if (userEntity.getRole() != Role.MANAGER) {
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
         User saved = userRepository.save(userEntity);
 
         log.info("User promoted successfully: userId={}, role={}", saved.getId(), saved.getRole());
-        return userMapper.toUserUserResponseDTO(saved);
+        return userMapper.toUserResponseDTO(saved);
     }
 
     @Override
@@ -252,7 +252,7 @@ public class UserServiceImpl implements UserService {
 
         balanceTransactionRepository.save(transaction);
 
-        return userMapper.toUserUserResponseDTO(user);
+        return userMapper.toUserResponseDTO(user);
     }
 
 

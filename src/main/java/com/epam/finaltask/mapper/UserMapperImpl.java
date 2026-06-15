@@ -32,7 +32,7 @@ public class UserMapperImpl implements UserMapper {
     }
 
     @Override
-    public UserResponseDTO toUserUserResponseDTO(User user) {
+    public UserResponseDTO toUserResponseDTO(User user) {
         return UserResponseDTO.builder()
                 .id(String.valueOf(user.getId()))
                 .username(user.getUsername())
