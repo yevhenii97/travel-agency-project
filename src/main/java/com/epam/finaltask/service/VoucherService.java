@@ -5,6 +5,7 @@ import java.util.List;
 import com.epam.finaltask.dto.user.ChangeVoucherStatusRequestDTO;
 import com.epam.finaltask.dto.voucher.ChangeHotStatusRequestDTO;
 import com.epam.finaltask.dto.voucher.VoucherDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface VoucherService {
@@ -19,11 +20,13 @@ public interface VoucherService {
     List<VoucherDTO> findAvailable(Pageable pageable);
     List<VoucherDTO> findAllByUserId(String userId);
 
-    List<VoucherDTO> search(
+    Page<VoucherDTO> search(
             String tourType,
             String transferType,
             String hotelType,
-            Double maxPrice
+            Double maxPrice,
+            boolean availableOnly,
+            Pageable pageable
     );
 
     List<VoucherDTO> findAll(Pageable pageable);

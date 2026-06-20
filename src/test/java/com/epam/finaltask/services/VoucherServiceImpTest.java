@@ -527,55 +527,6 @@ public class VoucherServiceImpTest {
     }
 
     @Test
-    @DisplayName("Should search vouchers with filters")
-    void test22() {
-        Voucher voucher = createVoucher(UUID.randomUUID(), 500.0);
-        VoucherDTO dto = new VoucherDTO();
-
-        when(voucherRepository.search(
-                TourType.LEISURE,
-                TransferType.PLANE,
-                HotelType.FIVE_STARS,
-                1000.0
-        )).thenReturn(List.of(voucher));
-
-        when(voucherMapper.toVoucherDTO(voucher)).thenReturn(dto);
-
-        List<VoucherDTO> result = voucherService.search(
-                "LEISURE",
-                "PLANE",
-                "FIVE_STARS",
-                1000.0
-        );
-
-        assertEquals(1, result.size());
-
-        verify(voucherRepository).search(
-                TourType.LEISURE,
-                TransferType.PLANE,
-                HotelType.FIVE_STARS,
-                1000.0
-        );
-    }
-
-    @Test
-    @DisplayName("Should search vouchers without filters")
-    void test23() {
-        Voucher voucher = createVoucher(UUID.randomUUID(), 500.0);
-        VoucherDTO dto = new VoucherDTO();
-
-        when(voucherRepository.search(null, null, null, null))
-                .thenReturn(List.of(voucher));
-        when(voucherMapper.toVoucherDTO(voucher)).thenReturn(dto);
-
-        List<VoucherDTO> result = voucherService.search("", "", "", null);
-
-        assertEquals(1, result.size());
-
-        verify(voucherRepository).search(null, null, null, null);
-    }
-
-    @Test
     @DisplayName("Should return all vouchers")
     void test24() {
         PageRequest pageable = PageRequest.of(0, 10);

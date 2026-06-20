@@ -326,6 +326,76 @@
                     </tr>
                     </tbody>
                 </table>
+
+
+
+
+
+                <nav th:if="${totalPages > 1}" class="mt-4">
+                    <ul class="pagination justify-content-center">
+
+                        <li class="page-item"
+                            th:classappend="${currentPage == 0} ? 'disabled'">
+
+                            <a class="page-link"
+                               th:href="@{/dashboard(
+                    page=${currentPage - 1},
+                    size=10,
+                    tourType=${selectedTourType},
+                    transferType=${selectedTransferType},
+                    hotelType=${selectedHotelType},
+                    maxPrice=${selectedMaxPrice}
+               )}">
+                                Previous
+                            </a>
+                        </li>
+
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                            th:classappend="${i == currentPage} ? 'active'">
+
+                            <a class="page-link"
+                               th:text="${i + 1}"
+                               th:href="@{/dashboard(
+                    page=${i},
+                    size=10,
+                    tourType=${selectedTourType},
+                    transferType=${selectedTransferType},
+                    hotelType=${selectedHotelType},
+                    maxPrice=${selectedMaxPrice}
+               )}">
+                                1
+                            </a>
+                        </li>
+
+                        <li class="page-item"
+                            th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+
+                            <a class="page-link"
+                               th:href="@{/dashboard(
+                    page=${currentPage + 1},
+                    size=10,
+                    tourType=${selectedTourType},
+                    transferType=${selectedTransferType},
+                    hotelType=${selectedHotelType},
+                    maxPrice=${selectedMaxPrice}
+               )}">
+                                Next
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+
+
+
+
+
+
+
+
+
+
             </div>
 
         </div>

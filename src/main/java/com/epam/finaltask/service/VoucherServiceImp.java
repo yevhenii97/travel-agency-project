@@ -13,6 +13,7 @@ import com.epam.finaltask.repository.UserRepository;
 import com.epam.finaltask.repository.VoucherRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -93,7 +94,7 @@ public class VoucherServiceImp implements VoucherService {
         BigDecimal userBalance = userEntity.getBalance();
         BigDecimal voucherPrice = BigDecimal.valueOf(voucherEntity.getPrice());
 
-        if(userBalance.compareTo(voucherPrice) < 0){
+        if (userBalance.compareTo(voucherPrice) < 0) {
             log.warn("Not enough balance: userId={}, balance={}, voucherPrice={}",
                     userEntity.getId(), userBalance, voucherPrice);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough balance");
@@ -274,30 +275,45 @@ public class VoucherServiceImp implements VoucherService {
     }
 
     @Override
-    public List<VoucherDTO> search(String tourType, String transferType, String hotelType, Double maxPrice) {
+    public Page<VoucherDTO> search(
+            String tourType,
+            String transferType,
+            String hotelType,
+            Double maxPrice,
+            boolean availableOnly,
+            Pageable pageable
+    ) {
         log.info("Searching vouchers");
-        log.debug("Search params: tourType={}, transferType={}, hotelType={}, maxPrice={}",
-                tourType, transferType, hotelType, maxPrice);
+        log.debug("Search params: tourType={}, transferType={}, hotelType={}, maxPrice={}, availableOnly={}, pageable={}",
+                tourType, transferType, hotelType, maxPrice, availableOnly, pageable);
 
         tourType = normalize(tourType);
         transferType = normalize(transferType);
         hotelType = normalize(hotelType);
 
-        TourType tourTypeEnum = tourType != null ? TourType.valueOf(tourType.toUpperCase()) : null;
-        TransferType transferTypeEnum = transferType != null ? TransferType.valueOf(transferType.toUpperCase()) : null;
-        HotelType hotelTypeEnum = hotelType != null ? HotelType.valueOf(hotelType.toUpperCase()) : null;
+        TourType tourTypeEnum = tourType != null
+                ? TourType.valueOf(tourType.toUpperCase())
+                : null;
 
-        List<VoucherDTO> vouchers = voucherRepository.search(
+        TransferType transferTypeEnum = transferType != null
+                ? TransferType.valueOf(transferType.toUpperCase())
+                : null;
+
+        HotelType hotelTypeEnum = hotelType != null
+                ? HotelType.valueOf(hotelType.toUpperCase())
+                : null;
+
+        Page<VoucherDTO> vouchers = voucherRepository.search(
                         tourTypeEnum,
                         transferTypeEnum,
                         hotelTypeEnum,
-                        maxPrice
+                        maxPrice,
+                        availableOnly,
+                        pageable
                 )
-                .stream()
-                .map(voucherMapper::toVoucherDTO)
-                .toList();
+                .map(voucherMapper::toVoucherDTO);
 
-        log.debug("Search completed. Found {} vouchers", vouchers.size());
+        log.debug("Search completed. Found {} vouchers", vouchers.getTotalElements());
 
         return vouchers;
     }

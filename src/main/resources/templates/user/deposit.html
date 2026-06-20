@@ -61,6 +61,10 @@
                                    class="form-control"
                                    th:field="*{amount}"
                                    th:placeholder="#{deposit.placeholder}">
+                            <div class="text-danger mt-1"
+                                 th:if="${#fields.hasErrors('amount')}"
+                                 th:errors="*{amount}">
+                            </div>
 
                         </div>
 

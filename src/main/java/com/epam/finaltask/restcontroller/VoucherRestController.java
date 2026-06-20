@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -197,14 +198,15 @@ public class VoucherRestController {
             @ApiResponse(responseCode = "400", description = "Invalid request"),
             @ApiResponse(responseCode = "403", description = "Access denied")
     })
-    public ResponseEntity<List<VoucherDTO>> searchVouchers(
+    public ResponseEntity<Page<VoucherDTO>> searchVouchers(
             @RequestParam(required = false) String tourType,
             @RequestParam(required = false) String transferType,
             @RequestParam(required = false) String hotelType,
-            @RequestParam(required = false) Double maxPrice
+            @RequestParam(required = false) Double maxPrice,
+            @PageableDefault(size = 10, sort = "price") Pageable pageable
     ) {
         log.info("Request to search voucher for {} tourType, {} transferType, {} hotelType, {} maxPrice",
                 tourType, transferType, hotelType, maxPrice);
-        return ResponseEntity.ok(voucherService.search(tourType, transferType, hotelType, maxPrice));
+        return ResponseEntity.ok(voucherService.search(tourType, transferType, hotelType, maxPrice, false, pageable));
     }
 }

@@ -3,11 +3,13 @@ package com.epam.finaltask.controller;
 import com.epam.finaltask.dto.user.ChangePasswordRequestDTO;
 import com.epam.finaltask.dto.user.DepositRequestDTO;
 import com.epam.finaltask.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,8 +33,13 @@ public class UserPageController {
     @PreAuthorize("hasRole('USER')")
     public String depositBalance(
             Authentication authentication,
-            @ModelAttribute DepositRequestDTO request
+            @Valid @ModelAttribute("depositRequest") DepositRequestDTO request,
+            BindingResult bindingResult
     ) {
+        if (bindingResult.hasErrors()) {
+            return "user/deposit";
+        }
+
         userService.depositOwnBalance(authentication.getName(), request);
         return "redirect:/dashboard?success=true";
     }
@@ -48,8 +55,13 @@ public class UserPageController {
     @PreAuthorize("hasRole('USER')")
     public String changePassword(
             Authentication authentication,
-            @ModelAttribute ChangePasswordRequestDTO request
+            @Valid @ModelAttribute("changePasswordRequest") ChangePasswordRequestDTO request,
+            BindingResult bindingResult
     ) {
+        if (bindingResult.hasErrors()) {
+            return "user/change-password";
+        }
+
         userService.changePassword(authentication.getName(), request);
         return "redirect:/dashboard?success=true";
     }

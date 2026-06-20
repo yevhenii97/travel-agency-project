@@ -5,6 +5,7 @@ import com.epam.finaltask.dto.user.UserResponseDTO;
 import com.epam.finaltask.dto.voucher.VoucherDTO;
 import com.epam.finaltask.service.UserService;
 import com.epam.finaltask.service.VoucherService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -75,7 +77,14 @@ public class AdminPageController {
 
     @PostMapping("/vouchers/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public String createVoucher(@ModelAttribute VoucherDTO voucherDTO) {
+    public String createVoucher(
+            @Valid @ModelAttribute("voucher") VoucherDTO voucherDTO,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            return "admin/create-voucher";
+        }
+
         voucherService.create(voucherDTO);
         return "redirect:/dashboard?success=true";
     }

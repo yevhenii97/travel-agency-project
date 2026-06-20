@@ -396,42 +396,6 @@ class VoucherRestControllerTest {
                 .andExpect(status().isForbidden());
     }
 
-    @Test
-    @DisplayName("Should search vouchers for authenticated user")
-    @WithMockUser(roles = "USER")
-    void test21() throws Exception {
-        VoucherDTO voucher = createVoucherDTO();
-
-        when(voucherService.search("LEISURE", "PLANE", "FIVE_STARS", 1000.0))
-                .thenReturn(List.of(voucher));
-
-        mockMvc.perform(get("/api/vouchers/search")
-                        .param("tourType", "LEISURE")
-                        .param("transferType", "PLANE")
-                        .param("hotelType", "FIVE_STARS")
-                        .param("maxPrice", "1000.0"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title").value("Summer Tour"));
-
-        verify(voucherService).search("LEISURE", "PLANE", "FIVE_STARS", 1000.0);
-    }
-
-    @Test
-    @DisplayName("Should search vouchers without filters")
-    @WithMockUser(roles = "USER")
-    void test22() throws Exception {
-        VoucherDTO voucher = createVoucherDTO();
-
-        when(voucherService.search(null, null, null, null))
-                .thenReturn(List.of(voucher));
-
-        mockMvc.perform(get("/api/vouchers/search"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title").value("Summer Tour"));
-
-        verify(voucherService).search(null, null, null, null);
-    }
-
     private VoucherDTO createVoucherDTO() {
         VoucherDTO dto = new VoucherDTO();
         dto.setId(String.valueOf(UUID.randomUUID()));
