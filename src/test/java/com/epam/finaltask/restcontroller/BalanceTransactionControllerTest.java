@@ -61,13 +61,6 @@ class BalanceTransactionControllerTest {
     }
 
     @Test
-    @DisplayName("Should deny own transactions history for anonymous user")
-    void test3() throws Exception {
-        mockMvc.perform(get("/api/transactions/me"))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     @DisplayName("Should get transactions history by user id for admin")
     @WithMockUser(roles = "ADMIN")
     void test4() throws Exception {

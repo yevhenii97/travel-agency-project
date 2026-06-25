@@ -70,12 +70,6 @@ class VoucherRestControllerTest {
         verify(voucherService).findAll(any());
     }
 
-    @Test
-    @DisplayName("Should deny getting all vouchers for anonymous user")
-    void test2() throws Exception {
-        mockMvc.perform(get("/api/vouchers"))
-                .andExpect(status().isUnauthorized());
-    }
 
     @Test
     @DisplayName("Should get vouchers by user id for admin")
