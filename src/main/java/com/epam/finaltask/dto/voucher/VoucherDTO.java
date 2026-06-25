@@ -1,6 +1,5 @@
 package com.epam.finaltask.dto.voucher;
 
-import com.epam.finaltask.annotations.ValidVoucherDates;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +13,6 @@ import java.util.UUID;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@ValidVoucherDates
 public class VoucherDTO {
 
     private String id;
